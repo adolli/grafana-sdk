@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/grafana-tools/sdk"
+	"github.com/adolli/grafana-sdk"
 )
 
 func TestCreateDelete(t *testing.T) {

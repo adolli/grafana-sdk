@@ -6,8 +6,8 @@ import (
 	"log"
 	"testing"
 
+	"github.com/adolli/grafana-sdk"
 	"github.com/chromedp/chromedp"
-	"github.com/grafana-tools/sdk"
 )
 
 /*
