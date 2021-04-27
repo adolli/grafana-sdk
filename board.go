@@ -79,24 +79,35 @@ type (
 		List []TemplateVar `json:"list"`
 	}
 	TemplateVar struct {
-		Name        string   `json:"name"`
-		Type        string   `json:"type"`
-		Auto        bool     `json:"auto,omitempty"`
-		AutoCount   *int     `json:"auto_count,omitempty"`
-		Datasource  *string  `json:"datasource"`
-		Refresh     BoolInt  `json:"refresh"`
-		Options     []Option `json:"options"`
-		IncludeAll  bool     `json:"includeAll"`
-		AllFormat   string   `json:"allFormat"`
-		AllValue    string   `json:"allValue"`
-		Multi       bool     `json:"multi"`
-		MultiFormat string   `json:"multiFormat"`
-		Query       string   `json:"query"`
-		Regex       string   `json:"regex"`
-		Current     Current  `json:"current"`
-		Label       string   `json:"label"`
-		Hide        uint8    `json:"hide"`
-		Sort        int      `json:"sort"`
+		Name        string           `json:"name"`
+		Type        string           `json:"type"`
+		Auto        bool             `json:"auto,omitempty"`
+		AutoCount   *int             `json:"auto_count,omitempty"`
+		Datasource  *string          `json:"datasource"`
+		Refresh     BoolInt          `json:"refresh"`
+		Options     []Option         `json:"options"`
+		IncludeAll  bool             `json:"includeAll"`
+		AllFormat   string           `json:"allFormat"`
+		AllValue    string           `json:"allValue"`
+		Multi       bool             `json:"multi"`
+		MultiFormat string           `json:"multiFormat"`
+		Query       TemplateVarQuery `json:"query"` // maybe string/ComplexTemplateVarQuery
+		Regex       string           `json:"regex"`
+		Current     Current          `json:"current"`
+		Label       string           `json:"label"`
+		Hide        uint8            `json:"hide"`
+		Sort        int              `json:"sort"`
+	}
+	TemplateVarQuery struct {
+		// 可能有两种结构，一种就是 string ""，另一种是object {"query": "xxx", "refId": "xxx"}
+		isSimpleString bool
+
+		Query string
+		RefId string
+	}
+	templateVarQueryInternal struct {
+		Query string `json:"query"`
+		RefId string `json:"refId"`
 	}
 	// for templateVar
 	Option struct {
@@ -163,6 +174,41 @@ func (h *Height) UnmarshalJSON(raw []byte) error {
 	var tmp string
 	err := json.Unmarshal(raw, &tmp)
 	*h = Height(tmp)
+	return err
+}
+
+func (q *TemplateVarQuery) MarshalJSON() ([]byte, error) {
+	if q.isSimpleString {
+		return json.Marshal(q.Query)
+	} else {
+		cq := templateVarQueryInternal{
+			Query: q.Query,
+			RefId: q.RefId,
+		}
+		return json.Marshal(cq)
+	}
+}
+
+func (q *TemplateVarQuery) UnmarshalJSON(data []byte) error {
+	// try simple string first
+	simpleStr := ""
+	err := json.Unmarshal(data, &simpleStr)
+	if err == nil {
+		q.isSimpleString = true
+		q.Query = simpleStr
+		return nil
+	}
+
+	// try complex query
+	complexQuery := templateVarQueryInternal{}
+	err = json.Unmarshal(data, &complexQuery)
+	if err == nil {
+		q.isSimpleString = false
+		q.Query = complexQuery.Query
+		q.RefId = complexQuery.RefId
+		return nil
+	}
+
 	return err
 }
 

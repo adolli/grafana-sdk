@@ -1,4 +1,4 @@
-package sdk_test
+package sdk
 
 /*
    Copyright 2016 Alexander I.Grafov <grafov@gmail.com>
@@ -20,13 +20,14 @@ package sdk_test
 */
 
 import (
+	"encoding/json"
 	"testing"
 
-	"github.com/grafana-tools/sdk"
+	"github.com/k0kubun/pp"
 )
 
 func TestAddTags(t *testing.T) {
-	b := sdk.NewBoard("Sample")
+	b := NewBoard("Sample")
 
 	b.AddTags("1", "2", "3")
 
@@ -36,7 +37,7 @@ func TestAddTags(t *testing.T) {
 }
 
 func TestBoardRemoveTags_Existent(t *testing.T) {
-	b := sdk.NewBoard("Sample")
+	b := NewBoard("Sample")
 
 	b.AddTags("1", "2", "3", "4", "4")
 	b.RemoveTags("1", "2", "5")
@@ -53,7 +54,7 @@ func TestBoardRemoveTags_Existent(t *testing.T) {
 }
 
 func TestBoardRemoveTags_NonExistent(t *testing.T) {
-	b := sdk.NewBoard("Sample")
+	b := NewBoard("Sample")
 	b.AddTags("1", "2")
 
 	b.RemoveTags("3", "4")
@@ -64,7 +65,7 @@ func TestBoardRemoveTags_NonExistent(t *testing.T) {
 }
 
 func TestBoardRemoveTags_WhenNoTags(t *testing.T) {
-	b := sdk.NewBoard("Sample")
+	b := NewBoard("Sample")
 
 	b.RemoveTags("1", "2")
 
@@ -74,7 +75,7 @@ func TestBoardRemoveTags_WhenNoTags(t *testing.T) {
 }
 
 func TestBoardHasTag_TagExists(t *testing.T) {
-	b := sdk.NewBoard("Sample")
+	b := NewBoard("Sample")
 	b.AddTags("1", "2", "3")
 
 	if !b.HasTag("2") {
@@ -83,7 +84,7 @@ func TestBoardHasTag_TagExists(t *testing.T) {
 }
 
 func TestBoardHasTag_TagNotExists(t *testing.T) {
-	b := sdk.NewBoard("Sample")
+	b := NewBoard("Sample")
 	b.AddTags("1", "2")
 
 	if b.HasTag("3") {
@@ -92,14 +93,43 @@ func TestBoardHasTag_TagNotExists(t *testing.T) {
 }
 
 func TestBoardAddLink(t *testing.T) {
-  b := sdk.NewBoard("Sample")
-  b.AddLink(sdk.Link {
-    Title: "test",
-    Type: "external_link",
-    IncludeVars: false,
-  })
+	b := NewBoard("Sample")
+	b.AddLink(Link{
+		Title:       "test",
+		Type:        "external_link",
+		IncludeVars: false,
+	})
 
-  if len(b.Links) != 1 {
+	if len(b.Links) != 1 {
 		t.Error("Link wasn't added")
-  }
+	}
+}
+
+func TestTemplateVarQuery(t *testing.T) {
+	var err error
+	type s struct {
+		Q TemplateVarQuery `json:"query"`
+	}
+	raw1 := `
+{
+	"query": "my query"
+}`
+	raw2 := `
+{
+	"query": {
+		"query": "complext query",
+		"refId": "refId"
+	}
+}
+`
+	o1 := s{}
+	o2 := s{}
+	err = json.Unmarshal([]byte(raw1), &o1)
+	pp.Println(err, o1)
+	err = json.Unmarshal([]byte(raw2), &o2)
+	pp.Println(err, o2)
+	b1, err := json.Marshal(&o1)
+	pp.Println(string(b1), err)
+	b2, err := json.Marshal(&o2)
+	pp.Println(string(b2), err)
 }
