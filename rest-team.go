@@ -74,6 +74,7 @@ func (r *Client) GetTeam(ctx context.Context, name string) (Team, error) {
 		err       error
 	)
 	params := url.Values{}
+	params["name"] = []string{name}
 	if raw, code, err = r.get(ctx, "api/teams/search", params); err != nil {
 		return Team{}, err
 	}
@@ -132,6 +133,26 @@ func (r *Client) DeleteTeam(ctx context.Context, id uint) (StatusMessage, error)
 		err  error
 	)
 	if raw, _, err = r.delete(ctx, fmt.Sprintf("api/teams/%d", id)); err != nil {
+		return StatusMessage{}, err
+	}
+	if err = json.Unmarshal(raw, &resp); err != nil {
+		return StatusMessage{}, err
+	}
+	return resp, nil
+}
+
+func (r *Client) AddTeamMember(ctx context.Context, tid, uid uint) (StatusMessage, error) {
+	var (
+		raw  []byte
+		resp StatusMessage
+		err  error
+	)
+	if raw, err = json.Marshal(struct {
+		UserID uint `json:"userId"`
+	}{UserID: uid}); err != nil {
+		return StatusMessage{}, err
+	}
+	if raw, _, err = r.post(ctx, fmt.Sprintf("api/teams/%d/members", tid), nil, raw); err != nil {
 		return StatusMessage{}, err
 	}
 	if err = json.Unmarshal(raw, &resp); err != nil {
