@@ -26,6 +26,15 @@ type OpentsdbTargetInfo struct {
 	Metric               string           `json:"metric"`
 }
 
+type CloudwatchTargetInfo struct {
+	Namespace  string            `json:"namespace"`
+	MetricName string            `json:"metricName"`
+	Statistics []string          `json:"statistics,omitempty"`
+	Dimensions map[string]string `json:"dimensions,omitempty"`
+	Period     string            `json:"period,omitempty"`
+	Region     string            `json:"region,omitempty"`
+}
+
 type MixedTargetInfo struct {
 	// For PostgreSQL
 	Table        string `json:"table,omitempty"`
@@ -86,14 +95,6 @@ type MixedTargetInfo struct {
 	// For Graphite
 	Target string `json:"target,omitempty"`
 
-	// For CloudWatch
-	Namespace  string            `json:"namespace,omitempty"`
-	MetricName string            `json:"metricName,omitempty"`
-	Statistics []string          `json:"statistics,omitempty"`
-	Dimensions map[string]string `json:"dimensions,omitempty"`
-	Period     string            `json:"period,omitempty"`
-	Region     string            `json:"region,omitempty"`
-
 	// For the Stackdriver data source. Find out more information at
 	// https:/grafana.com/docs/grafana/v6.0/features/datasources/stackdriver/
 	ProjectName        string                    `json:"projectName,omitempty"`
@@ -133,6 +134,15 @@ func (t *Target) UnmarshalJSON(b []byte) (err error) {
 		}
 	}
 
+	var cloudwatchTarget CloudwatchTargetInfo
+	err = json.Unmarshal(b, &cloudwatchTarget)
+	if err == nil {
+		if cloudwatchTarget.Namespace != "" && cloudwatchTarget.MetricName != "" {
+			t.CloudwatchTargetInfo = &cloudwatchTarget
+			return
+		}
+	}
+
 	var mixed MixedTargetInfo
 	err = json.Unmarshal(b, &mixed)
 	if err == nil {
@@ -148,6 +158,14 @@ func (t *Target) MarshalJSON() ([]byte, error) {
 			TargetCommonInfo
 			OpentsdbTargetInfo
 		}{t.TargetCommonInfo, *t.OpentsdbTargetInfo}
+		return json.Marshal(out)
+	}
+
+	if t.CloudwatchTargetInfo != nil {
+		var out = struct {
+			TargetCommonInfo
+			CloudwatchTargetInfo
+		}{t.TargetCommonInfo, *t.CloudwatchTargetInfo}
 		return json.Marshal(out)
 	}
 

@@ -482,8 +482,9 @@ type (
 type Target struct {
 	TargetCommonInfo
 
-	// first try to unmarshal to opentsdb target info
+	// try specific target to unmarshal first
 	*OpentsdbTargetInfo
+	*CloudwatchTargetInfo
 
 	// finally fallbacks to mixed
 	// because it is an fallback struct, it always has values
