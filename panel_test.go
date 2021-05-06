@@ -265,9 +265,14 @@ func TestNewGraph(t *testing.T) {
 
 func TestGraph_AddTarget(t *testing.T) {
 	var target = sdk.Target{
-		RefID:      "A",
-		Datasource: "Sample Source",
-		Expr:       "sample request"}
+		TargetCommonInfo: sdk.TargetCommonInfo{
+			RefID:      "A",
+			Datasource: "Sample Source",
+		},
+		MixedTargetInfo: sdk.MixedTargetInfo{
+			Expr: "sample request",
+		},
+	}
 	graph := sdk.NewGraph("")
 
 	graph.AddTarget(&target)
@@ -283,13 +288,23 @@ func TestGraph_AddTarget(t *testing.T) {
 func TestGraph_SetTargetNew(t *testing.T) {
 	var (
 		target1 = sdk.Target{
-			RefID:      "A",
-			Datasource: "Sample Source 1",
-			Expr:       "sample request 1"}
+			TargetCommonInfo: sdk.TargetCommonInfo{
+				RefID:      "A",
+				Datasource: "Sample Source 1",
+			},
+			MixedTargetInfo: sdk.MixedTargetInfo{
+				Expr: "sample request 1",
+			},
+		}
 		target2 = sdk.Target{
-			RefID:      "B",
-			Datasource: "Sample Source 2",
-			Expr:       "sample request 2"}
+			TargetCommonInfo: sdk.TargetCommonInfo{
+				RefID:      "B",
+				Datasource: "Sample Source 2",
+			},
+			MixedTargetInfo: sdk.MixedTargetInfo{
+				Expr: "sample request 2",
+			},
+		}
 	)
 	graph := sdk.NewGraph("")
 	graph.AddTarget(&target1)
@@ -310,13 +325,23 @@ func TestGraph_SetTargetNew(t *testing.T) {
 func TestGraph_SetTargetUpdate(t *testing.T) {
 	var (
 		target1 = sdk.Target{
-			RefID:      "A",
-			Datasource: "Sample Source 1",
-			Expr:       "sample request 1"}
+			TargetCommonInfo: sdk.TargetCommonInfo{
+				RefID:      "A",
+				Datasource: "Sample Source 1",
+			},
+			MixedTargetInfo: sdk.MixedTargetInfo{
+				Expr: "sample request 1",
+			},
+		}
 		target2 = sdk.Target{
-			RefID:      "A",
-			Datasource: "Sample Source 2",
-			Expr:       "sample request 2"}
+			TargetCommonInfo: sdk.TargetCommonInfo{
+				RefID:      "A",
+				Datasource: "Sample Source 2",
+			},
+			MixedTargetInfo: sdk.MixedTargetInfo{
+				Expr: "sample request 2",
+			},
+		}
 	)
 	graph := sdk.NewGraph("")
 	graph.AddTarget(&target1)
