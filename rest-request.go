@@ -102,8 +102,7 @@ func (r *Client) doRequest(ctx context.Context, method, query string, params url
 		return nil, 0, err
 	}
 	req = req.WithContext(ctx)
-	if !r.basicAuth && r.key != "Bearer " { // apikey can empty =v=
-		fmt.Println("???", r.key)
+	if !r.basicAuth && r.key != "" { // apikey can empty =v=
 		req.Header.Set("Authorization", r.key)
 	}
 	req.Header.Set("Accept", "application/json")
