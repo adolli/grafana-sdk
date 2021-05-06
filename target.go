@@ -35,6 +35,16 @@ type CloudwatchTargetInfo struct {
 	Region     string            `json:"region,omitempty"`
 }
 
+type PrometheusTargetInfo struct {
+	Expr           string `json:"expr"`
+	IntervalFactor int    `json:"intervalFactor,omitempty"`
+	Interval       string `json:"interval,omitempty"`
+	Step           int    `json:"step,omitempty"`
+	LegendFormat   string `json:"legendFormat,omitempty"`
+	Instant        bool   `json:"instant,omitempty"`
+	Format         string `json:"format,omitempty"`
+}
+
 type MixedTargetInfo struct {
 	// For PostgreSQL
 	Table        string `json:"table,omitempty"`
@@ -55,15 +65,6 @@ type MixedTargetInfo struct {
 		Type   string   `json:"type,omitempty"`
 		Params []string `json:"params,omitempty"`
 	} `json:"group,omitempty"`
-
-	// For Prometheus
-	Expr           string `json:"expr,omitempty"`
-	IntervalFactor int    `json:"intervalFactor,omitempty"`
-	Interval       string `json:"interval,omitempty"`
-	Step           int    `json:"step,omitempty"`
-	LegendFormat   string `json:"legendFormat,omitempty"`
-	Instant        bool   `json:"instant,omitempty"`
-	Format         string `json:"format,omitempty"`
 
 	// For InfluxDB
 	Measurement string `json:"measurement,omitempty"`
@@ -125,6 +126,15 @@ func (t *Target) UnmarshalJSON(b []byte) (err error) {
 	}
 
 	// try specific datasource first
+	var promTarget PrometheusTargetInfo
+	err = json.Unmarshal(b, &promTarget)
+	if err == nil {
+		if promTarget.Expr != "" {
+			t.PrometheusTargetInfo = &promTarget
+			return
+		}
+	}
+
 	var opentsdbTarget OpentsdbTargetInfo
 	err = json.Unmarshal(b, &opentsdbTarget)
 	if err == nil {
@@ -153,6 +163,14 @@ func (t *Target) UnmarshalJSON(b []byte) (err error) {
 
 func (t *Target) MarshalJSON() ([]byte, error) {
 	// try specific datasource first
+	if t.PrometheusTargetInfo != nil {
+		var out = struct {
+			TargetCommonInfo
+			PrometheusTargetInfo
+		}{t.TargetCommonInfo, *t.PrometheusTargetInfo}
+		return json.Marshal(out)
+	}
+
 	if t.OpentsdbTargetInfo != nil {
 		var out = struct {
 			TargetCommonInfo

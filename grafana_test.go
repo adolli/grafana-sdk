@@ -18,7 +18,7 @@ func ExampleNewBoard() {
 			RefID:      "A",
 			Datasource: "Sample Source 1",
 		},
-		MixedTargetInfo: sdk.MixedTargetInfo{
+		PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
 			Expr: "sample request 1",
 		},
 	}

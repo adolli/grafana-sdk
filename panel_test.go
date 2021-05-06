@@ -269,7 +269,7 @@ func TestGraph_AddTarget(t *testing.T) {
 			RefID:      "A",
 			Datasource: "Sample Source",
 		},
-		MixedTargetInfo: sdk.MixedTargetInfo{
+		PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
 			Expr: "sample request",
 		},
 	}
@@ -292,7 +292,7 @@ func TestGraph_SetTargetNew(t *testing.T) {
 				RefID:      "A",
 				Datasource: "Sample Source 1",
 			},
-			MixedTargetInfo: sdk.MixedTargetInfo{
+			PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
 				Expr: "sample request 1",
 			},
 		}
@@ -301,7 +301,7 @@ func TestGraph_SetTargetNew(t *testing.T) {
 				RefID:      "B",
 				Datasource: "Sample Source 2",
 			},
-			MixedTargetInfo: sdk.MixedTargetInfo{
+			PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
 				Expr: "sample request 2",
 			},
 		}
@@ -329,7 +329,7 @@ func TestGraph_SetTargetUpdate(t *testing.T) {
 				RefID:      "A",
 				Datasource: "Sample Source 1",
 			},
-			MixedTargetInfo: sdk.MixedTargetInfo{
+			PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
 				Expr: "sample request 1",
 			},
 		}
@@ -338,7 +338,7 @@ func TestGraph_SetTargetUpdate(t *testing.T) {
 				RefID:      "A",
 				Datasource: "Sample Source 2",
 			},
-			MixedTargetInfo: sdk.MixedTargetInfo{
+			PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
 				Expr: "sample request 2",
 			},
 		}

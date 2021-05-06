@@ -483,6 +483,7 @@ type Target struct {
 	TargetCommonInfo
 
 	// try specific target to unmarshal first
+	*PrometheusTargetInfo
 	*OpentsdbTargetInfo
 	*CloudwatchTargetInfo
 

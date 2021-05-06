@@ -5,7 +5,9 @@ import (
 	"testing"
 )
 
-func TestTarget_Unmarshal(t *testing.T) {
+func TestTarget_Unmarshal1(t *testing.T) {
+	// raw data with some residue fields
+	// such as the following `dimensions`,`group`
 	raw := []byte(`
 [
   {
@@ -41,5 +43,7 @@ func TestTarget_Unmarshal(t *testing.T) {
 `)
 	var targets []Target
 	err := json.Unmarshal(raw, &targets)
-	println(err.Error())
+	if err != nil {
+		t.Error(err.Error())
+	}
 }
