@@ -11,19 +11,20 @@ type TargetCommonInfo struct {
 }
 
 type OpentsdbTargetInfo struct {
-	Aggregator           string           `json:"aggregator"`
-	Alias                string           `json:"alias,omitempty"`
-	CurrentFilterGroupBy bool             `json:"currentFilterGroupBy,omitempty"`
-	CurrentFilterKey     string           `json:"currentFilterKey,omitempty"`
-	CurrentFilterType    string           `json:"currentFilterType,omitempty"`
-	CurrentFilterValue   string           `json:"currentFilterValue,omitempty"`
-	CurrentTagKey        string           `json:"currentTagKey,omitempty"`
-	CurrentTagValue      string           `json:"currentTagValue,omitempty"`
-	DownsampleAggregator string           `json:"downsampleAggregator,omitempty"`
-	DownsampleFillPolicy string           `json:"downsampleFillPolicy,omitempty"`
-	DownsampleInterval   string           `json:"downsampleInterval,omitempty"`
-	Filters              []OpentsdbFilter `json:"filters,omitempty"`
-	Metric               string           `json:"metric"`
+	Aggregator           string            `json:"aggregator"`
+	Alias                string            `json:"alias,omitempty"`
+	CurrentFilterGroupBy bool              `json:"currentFilterGroupBy,omitempty"`
+	CurrentFilterKey     string            `json:"currentFilterKey,omitempty"`
+	CurrentFilterType    string            `json:"currentFilterType,omitempty"`
+	CurrentFilterValue   string            `json:"currentFilterValue,omitempty"`
+	CurrentTagKey        string            `json:"currentTagKey,omitempty"`
+	CurrentTagValue      string            `json:"currentTagValue,omitempty"`
+	DownsampleAggregator string            `json:"downsampleAggregator,omitempty"`
+	DownsampleFillPolicy string            `json:"downsampleFillPolicy,omitempty"`
+	DownsampleInterval   string            `json:"downsampleInterval,omitempty"`
+	Filters              []OpentsdbFilter  `json:"filters,omitempty"`
+	Tags                 map[string]string `json:"tags,omitempty"`
+	Metric               string            `json:"metric"`
 }
 
 type CloudwatchTargetInfo struct {
