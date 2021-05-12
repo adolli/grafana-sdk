@@ -25,7 +25,12 @@ type Team struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	AvatarUrl   string `json:"avatarUrl"`
-	MemberCount int `json:"memberCount"`
+	MemberCount int    `json:"memberCount"`
+}
+
+type TeamMsg struct {
+	Message string `json:"message"`
+	TeamID  uint   `json:"teamId"`
 }
 
 type PageTeams struct {

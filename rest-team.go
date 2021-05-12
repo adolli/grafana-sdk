@@ -108,20 +108,20 @@ func (r *Client) GetUserTeams(ctx context.Context) {
 
 }
 
-func (r *Client) CreateTeam(ctx context.Context, team Team) (StatusMessage, error) {
+func (r *Client) CreateTeam(ctx context.Context, team Team) (TeamMsg, error) {
 	var (
 		raw  []byte
-		resp StatusMessage
+		resp TeamMsg
 		err  error
 	)
 	if raw, err = json.Marshal(team); err != nil {
-		return StatusMessage{}, err
+		return TeamMsg{}, err
 	}
 	if raw, _, err = r.post(ctx, "api/teams", nil, raw); err != nil {
-		return StatusMessage{}, err
+		return TeamMsg{}, err
 	}
 	if err = json.Unmarshal(raw, &resp); err != nil {
-		return StatusMessage{}, err
+		return TeamMsg{}, err
 	}
 	return resp, nil
 }
@@ -157,6 +157,22 @@ func (r *Client) AddTeamMember(ctx context.Context, tid, uid uint) (StatusMessag
 	}
 	if err = json.Unmarshal(raw, &resp); err != nil {
 		return StatusMessage{}, err
+	}
+	return resp, nil
+}
+
+func (r *Client) GetTeamMembers(ctx context.Context, tid uint) ([]User, error) {
+	var (
+		raw  []byte
+		resp []User
+		err  error
+	)
+	if raw, _, err = r.get(ctx, fmt.Sprintf("api/teams/%d/members", tid), nil); err != nil {
+		return nil, err
+	}
+
+	if err = json.Unmarshal(raw, &resp); err != nil {
+		return nil, err
 	}
 	return resp, nil
 }
