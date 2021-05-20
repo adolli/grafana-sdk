@@ -213,11 +213,11 @@ func (v *StringSliceString) UnmarshalJSON(raw []byte) error {
 		return nil
 	}
 
-	// Lastly try with string slice.
+	// Lastly try with string slice, then fallback to string-repr
 	var strSlice []string
 	err := json.Unmarshal(raw, &strSlice)
 	if err != nil {
-		return err
+		strSlice = []string{string(raw)}
 	}
 
 	v.Value = strSlice

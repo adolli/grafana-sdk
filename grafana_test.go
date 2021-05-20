@@ -14,9 +14,14 @@ func ExampleNewBoard() {
 	row1.Add(sdk.NewGraph("Sample graph"))
 	graphWithDs := sdk.NewGraph("Sample graph 2")
 	target := sdk.Target{
-		RefID:      "A",
-		Datasource: "Sample Source 1",
-		Expr:       "sample request 1"}
+		TargetCommonInfo: sdk.TargetCommonInfo{
+			RefID:      "A",
+			Datasource: "Sample Source 1",
+		},
+		PrometheusTargetInfo: &sdk.PrometheusTargetInfo{
+			Expr: "sample request 1",
+		},
+	}
 	graphWithDs.AddTarget(&target)
 	row1.Add(graphWithDs)
 	data, _ := json.MarshalIndent(board, "", "    ")

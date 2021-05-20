@@ -494,90 +494,16 @@ type (
 
 // for an any panel
 type Target struct {
-	RefID      string `json:"refId"`
-	Datasource string `json:"datasource,omitempty"`
-	Hide       bool   `json:"hide,omitempty"`
+	TargetCommonInfo
 
-	// For PostgreSQL
-	Table        string `json:"table,omitempty"`
-	TimeColumn   string `json:"timeColumn,omitempty"`
-	MetricColumn string `json:"metricColumn,omitempty"`
-	RawSql       string `json:"rawSql,omitempty"`
-	Select       [][]struct {
-		Params []string `json:"params,omitempty"`
-		Type   string   `json:"type,omitempty"`
-	} `json:"select,omitempty"`
-	Where []struct {
-		Type     string   `json:"type,omitempty"`
-		Name     string   `json:"name,omitempty"`
-		Params   []string `json:"params,omitempty"`
-		Datatype string   `json:"datatype,omitempty"`
-	} `json:"where,omitempty"`
-	Group []struct {
-		Type   string   `json:"type,omitempty"`
-		Params []string `json:"params,omitempty"`
-	} `json:"group,omitempty"`
+	// try specific target to unmarshal first
+	*PrometheusTargetInfo
+	*OpentsdbTargetInfo
+	*CloudwatchTargetInfo
 
-	// For Prometheus
-	Expr           string `json:"expr,omitempty"`
-	IntervalFactor int    `json:"intervalFactor,omitempty"`
-	Interval       string `json:"interval,omitempty"`
-	Step           int    `json:"step,omitempty"`
-	LegendFormat   string `json:"legendFormat,omitempty"`
-	Instant        bool   `json:"instant,omitempty"`
-	Format         string `json:"format,omitempty"`
-
-	// For InfluxDB
-	Measurement string `json:"measurement,omitempty"`
-
-	// For Elasticsearch
-	DsType  *string `json:"dsType,omitempty"`
-	Metrics []struct {
-		ID    string `json:"id"`
-		Field string `json:"field"`
-		Type  string `json:"type"`
-	} `json:"metrics,omitempty"`
-	Query      string `json:"query,omitempty"`
-	Alias      string `json:"alias,omitempty"`
-	RawQuery   bool   `json:"rawQuery,omitempty"`
-	TimeField  string `json:"timeField,omitempty"`
-	BucketAggs []struct {
-		ID       string `json:"id"`
-		Field    string `json:"field"`
-		Type     string `json:"type"`
-		Settings struct {
-			Interval    string `json:"interval,omitempty"`
-			MinDocCount int    `json:"min_doc_count"`
-			Order       string `json:"order,omitempty"`
-			OrderBy     string `json:"orderBy,omitempty"`
-			Size        string `json:"size,omitempty"`
-		} `json:"settings"`
-	} `json:"bucketAggs,omitempty"`
-
-	// For Graphite
-	Target string `json:"target,omitempty"`
-
-	// For CloudWatch
-	Namespace  string            `json:"namespace,omitempty"`
-	MetricName string            `json:"metricName,omitempty"`
-	Statistics []string          `json:"statistics,omitempty"`
-	Dimensions map[string]string `json:"dimensions,omitempty"`
-	Period     string            `json:"period,omitempty"`
-	Region     string            `json:"region,omitempty"`
-
-	// For the Stackdriver data source. Find out more information at
-	// https:/grafana.com/docs/grafana/v6.0/features/datasources/stackdriver/
-	ProjectName        string                    `json:"projectName,omitempty"`
-	AlignOptions       []StackdriverAlignOptions `json:"alignOptions,omitempty"`
-	AliasBy            string                    `json:"aliasBy,omitempty"`
-	MetricType         string                    `json:"metricType,omitempty"`
-	MetricKind         string                    `json:"metricKind,omitempty"`
-	Filters            []string                  `json:"filters,omitempty"`
-	AlignmentPeriod    string                    `json:"alignmentPeriod,omitempty"`
-	CrossSeriesReducer string                    `json:"crossSeriesReducer,omitempty"`
-	PerSeriesAligner   string                    `json:"perSeriesAligner,omitempty"`
-	ValueType          string                    `json:"valueType,omitempty"`
-	GroupBys           []string                  `json:"groupBys,omitempty"`
+	// finally fallbacks to mixed
+	// because it is an fallback struct, it always has values
+	MixedTargetInfo
 }
 
 // StackdriverAlignOptions defines the list of alignment options shown in
