@@ -154,6 +154,7 @@ type (
 		Thresholds      []Threshold      `json:"thresholds,omitempty"`
 		TimeFrom        *string          `json:"timeFrom,omitempty"`
 		TimeShift       *string          `json:"timeShift,omitempty"`
+		TimeRegions     []TimeRegion     `json:"timeRegions,omitempty"`
 		Tooltip         Tooltip          `json:"tooltip"`
 		XAxis           bool             `json:"x-axis,omitempty"`
 		YAxis           bool             `json:"y-axis,omitempty"`
@@ -359,6 +360,19 @@ type (
 		YBucketSize   *float64 `json:"yBucketSize"`
 	}
 	CustomPanel map[string]interface{}
+
+	TimeRegion struct {
+		ColorMode     string `json:"colorMode,omitempty"` // color yellow/red/blue/...
+		Fill          bool   `json:"fill,omitempty"`
+		FillColor     string `json:"fillColor,omitempty"` // rgba(r, g, b, a)
+		Line          bool   `json:"line,omitempty"`
+		LineColor     string `json:"lineColor,omitempty"`     // rgba
+		Op            string `json:"op,omitempty"`            // fixed: time
+		From          string `json:"from,omitempty"`          // from HH:mm
+		To            string `json:"to,omitempty"`            // to HH:mm
+		FromDayOfWeek int    `json:"fromDayOfWeek,omitempty"` // Sun-0 ... Sat-6
+		ToDayOfWeek   int    `json:"toDayOfWeek,omitempty"`   // Sun-0 ... Sat-6
+	}
 )
 
 // for a graph panel
